@@ -28,7 +28,7 @@ public class GreetingResource {
     }
 
     @POST
-    @Path("/personalized/HelloPost")
+    @Path("/personalized")
     @Produces(MediaType.TEXT_PLAIN)
     public String personalizedHelloPost(Person person) {
         return "Hello, " + person.getFirstName() + " " + person.getLastName() + "!";
