@@ -1,5 +1,4 @@
 package org.acme;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -28,7 +27,7 @@ public class GreetingResource {
     }
 
     @POST
-    @Path("/personalized/HelloPost")
+    @Path("/personalized")
     @Produces(MediaType.TEXT_PLAIN)
     public String personalizedHelloPost(Person person) {
         return "Hello, " + person.getFirstName() + " " + person.getLastName() + "!";
