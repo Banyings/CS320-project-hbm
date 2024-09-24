@@ -1,6 +1,4 @@
 package org.acme;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -15,7 +13,6 @@ public class GreetingResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return "Hello RESTEasy";
-
     }
 
     @Path("/personalizedHello/{name}")
@@ -25,35 +22,33 @@ public class GreetingResource {
         return "Hello " + name;
 
     }
-
-    @POST
     @Path("/personalized")
+    @POST
     @Produces(MediaType.TEXT_PLAIN)
-    public String personalizedHelloPost(Person person) {
-        return "Hello, " + person.getFirstName() + " " + person.getLastName() + "!";
-    }
+    public String personalizedHelloPost(Person p) {
+    return "Hello " + p.getFirst() + " " + p.getLast();
+}
 
     public static class Person {
-        @JsonProperty("firstName")
-        private String firstName;
+    private String first;
+    private String last;
 
-        @JsonProperty("lastName")
-        private String lastName;
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
+    public String getFirst() { 
+        return first; 
     }
+
+    public void setFirst(String first) { 
+        this.first = first; 
+    }
+
+    public String getLast() { 
+        return last; 
+    }
+
+    public void setLast(String last) { 
+        this.last = last; 
+    }
+}
+
+
 }
