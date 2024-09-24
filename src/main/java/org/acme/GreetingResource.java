@@ -1,4 +1,5 @@
 package org.acme;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -22,33 +23,33 @@ public class GreetingResource {
         return "Hello " + name;
 
     }
+
     @Path("/personalized")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     public String personalizedHelloPost(Person p) {
-    return "Hello " + p.getFirst() + " " + p.getLast();
-}
+        return "Hello " + p.getFirst() + " " + p.getLast();
+    }
 
     public static class Person {
-    private String first;
-    private String last;
+        private String first;
+        private String last;
 
-    public String getFirst() { 
-        return first; 
+        public String getFirst() {
+            return first;
+        }
+
+        public void setFirst(String first) {
+            this.first = first;
+        }
+
+        public String getLast() {
+            return last;
+        }
+
+        public void setLast(String last) {
+            this.last = last;
+        }
     }
-
-    public void setFirst(String first) { 
-        this.first = first; 
-    }
-
-    public String getLast() { 
-        return last; 
-    }
-
-    public void setLast(String last) { 
-        this.last = last; 
-    }
-}
-
 
 }
