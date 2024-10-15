@@ -1,5 +1,6 @@
 package org.acme;
 
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -16,12 +17,14 @@ public class GreetingResource {
         return "Hello RESTEasy";
     }
 
-    @Path("/personalizedHello/{name}")
-    @GET
+    @Path("/personalized/{name}")
+    @POST
     @Produces(MediaType.TEXT_PLAIN)
+    @Transactional
     public String personalizedHello(@PathParam("name") String name) {
-        return "Hello " + name;
-
+        UserName userName = new UserName(name);
+        userName.persist();
+        return "Hello " + name + "! Your name has been stored in the database.";
     }
 
     @Path("/personalized")
@@ -51,5 +54,4 @@ public class GreetingResource {
             this.last = last;
         }
     }
-
 }

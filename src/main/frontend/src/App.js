@@ -9,7 +9,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/hello/personalized', {
+      const response = await fetch("/hello/personalized", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
