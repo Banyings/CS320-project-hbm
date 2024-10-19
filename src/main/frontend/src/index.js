@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import Page2 from'./Page2';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Navbar from './Navbar';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+    <Navbar/>
     <Routes>
       <Route path="/" element ={<App/>}/>
        <Route path="/page2" element ={<Page2/>}/>{

@@ -60,7 +60,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         {message && <p className="message">{message}</p>}
-        <button onClick={navigateToPage2}>Go to Page 2</button>
+        <button onClick={navigateToPage2}> Go To Page2</button>
       </main>
     </div>
   );
