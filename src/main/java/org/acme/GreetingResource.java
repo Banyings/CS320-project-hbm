@@ -4,17 +4,19 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.List;
 
 @Path("/hello")
 public class GreetingResource {
-    //default 
+    // default
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return "Hello RESTEasy";
     }
-    //create names in te datebase
+
+    // create names in te datebase
     @Path("/personalized/{name}")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -24,7 +26,8 @@ public class GreetingResource {
         userName.persist();
         return "Hello " + name + "! Your name has been stored in the database.";
     }
-    //Frontend post
+
+    // Frontend post
     @Path("/personalized")
     @POST
     @Produces(MediaType.TEXT_PLAIN)

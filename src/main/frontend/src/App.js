@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 function App() {
+  const navigate = useNavigate();
+  
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [message, setMessage] = useState('');
+
+  const navigateToPage2 = () => {
+    navigate('/page2');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +21,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ first:firstName, last:lastName }),
+        body: JSON.stringify({ first: firstName, last: lastName }),
       });
       
       if (!response.ok) {
@@ -53,6 +60,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         {message && <p className="message">{message}</p>}
+        <button onClick={navigateToPage2}>Go to Page 2</button>
       </main>
     </div>
   );
