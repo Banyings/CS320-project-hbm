@@ -26,11 +26,13 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
 }
 
 .input-group {
   margin-bottom: 15px;
   width: 100%;
+  
 }
 
 label {
@@ -41,10 +43,11 @@ label {
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  margin: 5px;
 }
 
 button {
@@ -55,10 +58,12 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  margin: 5px;
 }
 
 button:hover {
   background-color: #45a049;
+
 }
 
 .greeting-message {
