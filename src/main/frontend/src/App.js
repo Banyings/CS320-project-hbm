@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import './App.css';
 
 function App() {
@@ -9,8 +10,8 @@ function App() {
   const [lastName, setLastName] = useState('');
   const [message, setMessage] = useState('');
 
-  const navigateToPage2 = () => {
-    navigate('/page2');
+  const navigateToServices = () => {
+    navigate('/Services');
   };
 
   const handleSubmit = async (e) => {
@@ -39,20 +40,20 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>Personalized Greeting</h1>
+        <h1>Welcome To BanyingsBarshop</h1>
       </header>
       <main>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="Enter Your First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
           <input
             type="text"
-            placeholder="Last Name"
+            placeholder="Enter Your Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
@@ -60,7 +61,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
         {message && <p className="message">{message}</p>}
-        <button onClick={navigateToPage2}> Go To Page2</button>
+        <button onClick={navigateToServices}> Go To Services</button>
       </main>
     </div>
   );

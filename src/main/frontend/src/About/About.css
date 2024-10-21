@@ -1,0 +1,52 @@
+
+.about {
+  text-align: center;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  border-radius: 10px;
+  }
+.about h1{
+  background-color: #282c34;
+  color: white;
+  padding: 20px;
+  border-radius: 10px 10px 0 0;
+  margin:0;
+}
+.about h2{
+  background-color: #282c34;
+  color: white;
+  padding: 20px;
+  border-radius: 10px 10px 0 0;
+  margin:0;
+  font-size:1em;
+}
+.about p{
+  padding: 20px;
+  border-radius: 0 0 10px 10px;
+  background-color: #fff;
+  margin-top: 0;
+}
+.about ul{
+  padding: 20px;
+  border-radius: 0 0 10px 10px;
+  background-color: #fff;
+  margin-top: 0;
+}
+/*  */
+button:hover {
+  background-color: #45a049;
+}
+/*  */
+.booknow{
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius:20px;
+  cursor: pointer;
+  font-size: ;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
