@@ -9,6 +9,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Navbar from './Navbar/Navbar'
 import Services from './Services/Services';
 import Payment from './PaymentForm/PaymentForm';
+// import Signup from'./Signup/signup';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,6 +24,7 @@ root.render(
        <Route path = "/contact" element ={<Contact/>}/>
        <Route path = "/services" element ={<Services/>}/>
        <Route path = "/payment" element ={<Payment/>}/>
+       {/* <Route path = "/signup" element ={<Signup/>}/> */}
     </Routes>
     </BrowserRouter>
   </React.StrictMode>

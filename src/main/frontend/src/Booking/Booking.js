@@ -6,17 +6,35 @@ function Booking() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',  // Changed from 'name' to 'username'
     service: '',
     date: '',
     time: '',
     paymentMethod: ''
   });
 
+  const [errors, setErrors] = useState({
+    username: ''
+  });
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate email before submission
+    if (!validateEmail(formData.username)) {
+      setErrors(prev => ({
+        ...prev,
+        username: 'Please enter a valid email address'
+      }));
+      return;
+    }
+
     console.log(formData);
-    // Here you might want to save the form data or pass it to the payment page
     navigateToPayment();
   };
 
@@ -30,6 +48,14 @@ function Booking() {
       ...prevData,
       [name]: value
     }));
+    
+    // Clear error when user starts typing
+    if (name === 'username') {
+      setErrors(prev => ({
+        ...prev,
+        username: ''
+      }));
+    }
   };
 
   return (
@@ -37,14 +63,20 @@ function Booking() {
       <h1>Book an Appointment</h1>
       <form onSubmit={handleSubmit}>
         <label className='label'>
-          Name:
+          Username:
           <input
-            type="text"
-            name="name"
-            value={formData.name}
+            type="email"
+            name="username"  // Changed from 'username' to 'name'
+            placeholder='johndoe@gmail.com'
+            value={formData.username}
             onChange={handleInputChange}
             required
           />
+          {errors.username && (
+            <span className="error-message" style={{ color: 'red', fontSize: '0.8em' }}>
+              {errors.username}
+            </span>
+          )}
         </label>
         <label>
           Service:

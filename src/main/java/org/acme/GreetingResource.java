@@ -17,25 +17,19 @@ public class GreetingResource {
     }
 
     // create names in te datebase
-    @Path("/personalized/{name}")
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Transactional
-    public String personalizedHello(@PathParam("name") String name) {
-        UserName userName = new UserName(name);
-        userName.persist();
-        return "Hello " + name + "! Your name has been stored in the database.";
-    }
-
-    // Frontend post
     @Path("/personalized")
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    public String personalizedHelloPost(Person p) {
-        return "Hello " + p.getFirst() + " " + p.getLast() + " Now You Can go to services";
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public String personalizedHello(Person person) {
+        // Create UserName instance from Person's first and last name
+        UserName userName = new UserName(person.getFirst(), person.getLast());
+        userName.persist();
+        return "Hello " + person.getFirst() + " " + person.getLast() + "! You can now book an appointment";
     }
 
-    // GET request to retrieve all names
+    // SEE names in the Database
     @GET
     @Path("/names")
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,7 +37,7 @@ public class GreetingResource {
         return UserName.listAll();
     }
 
-    // GET request to retrieve a specific name
+    // GET a specific name from the Database
     @GET
     @Path("/names/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,18 +49,20 @@ public class GreetingResource {
         return Response.ok(userName).build();
     }
 
-    // PUT request to update a name
+    // Put the First and Last Names in the Database
     @PUT
     @Path("/names/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response updateName(@PathParam("id") Long id, UserName updatedName) {
+    public Response getName(@PathParam("id") Long id, UserName updatedName) {
         UserName userName = UserName.findById(id);
         if (userName == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        userName.name = updatedName.name; // Directly update the name field
+        // Update firstName and lastName fields
+        userName.firstName = updatedName.firstName;
+        userName.lastName = updatedName.lastName;
         return Response.ok(userName).build();
     }
 

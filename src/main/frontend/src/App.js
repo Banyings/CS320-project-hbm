@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import './App.css';
 
-function App() {
+const App = () => {
   const navigate = useNavigate();
   
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [message, setMessage] = useState('');
+  const [showBookButton, setShowBookButton] = useState(false);
 
-  const navigateToServices = () => {
-    navigate('/Services');
+  const navigateToBooking = () => {
+    navigate('/Booking');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/hello/personalized", {
+      const response = await fetch("hello/personalized", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,6 +31,10 @@ function App() {
       
       const text = await response.text();
       setMessage(text);
+      
+      if (text.toLowerCase().includes('you can now book an appointment')) {
+        setShowBookButton(true);
+      }
     } catch (error) {
       console.error('Error fetching message:', error);
       setMessage('Failed to fetch message from server');
@@ -60,11 +64,15 @@ function App() {
           />
           <button type="submit">Submit</button>
         </form>
+        
         {message && <p className="message">{message}</p>}
-        <button onClick={navigateToServices}> Go To Services</button>
+        
+        {showBookButton && (
+          <button className="book-now" onClick={navigateToBooking}>Book Now</button>
+        )}
       </main>
     </div>
   );
-}
+};
 
 export default App;
