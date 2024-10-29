@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaImages, FaInfoCircle, FaEnvelope } from 'react-icons/fa';
+import { FaHome, FaImages,FaCalendarAlt, FaInfoCircle, FaSignInAlt ,FaEnvelope } from 'react-icons/fa';
 // import Image from'./Image.next';
 import './Navbar.css';
 
@@ -23,11 +23,14 @@ export default function Navbar() {
       
       <div className={`nav-links ${isOpen ? 'show' : ''}`}>
         <Link to="/"><FaHome /> Home</Link>
+        <Link to="/login"><FaSignInAlt  /> Log In</Link>
         <Link to="/about"><FaInfoCircle /> About</Link>
-        {/* <Link to="/booking"><FaCalendarAlt /> Booking</Link> */}
+        <Link to="/booking"><FaCalendarAlt /> Booking</Link>
         <Link to="/contact"><FaEnvelope /> Contact</Link>
         <Link to="/services"><FaImages /> Services</Link>
-        {/* <Link to="/signup"><FaImages /> Signup</Link> */}
+        
+        {/* <Link to="/signup"><FaImages /> Sign Up</Link> */}
+        {/* <Link to="/resetPassword"><FaImages /> ResetPassword</Link> */}
 
       </div>
     </nav>

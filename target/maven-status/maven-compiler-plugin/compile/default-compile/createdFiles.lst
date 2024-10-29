@@ -1,0 +1,10 @@
+org/acme/UserName.class
+org/acme/model/ErrorResponse.class
+org/acme/BookingResource.class
+org/acme/model/BookingResponse.class
+org/acme/GreetingResource.class
+org/acme/GreetingResource$Person.class
+org/acme/model/BookingRequest.class
+org/acme/service/BookingService.class
+org/acme/model/Booking.class
+org/acme/exception/BookingException.class

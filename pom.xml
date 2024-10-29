@@ -71,6 +71,20 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+          <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-amazon-lambda</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-amazon-lambda-http</artifactId>
+        </dependency>
+        
+        <!-- Netty dependency -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-netty</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -4,9 +4,8 @@ import './Booking.css';
 
 function Booking() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
-    username: '',  // Changed from 'name' to 'username'
+    username: '',
     service: '',
     date: '',
     time: '',
@@ -14,18 +13,22 @@ function Booking() {
   });
 
   const [errors, setErrors] = useState({
-    username: ''
+    username: '',
+    submit: ''
   });
+
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [processingTime, setProcessingTime] = useState(30);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate email before submission
     if (!validateEmail(formData.username)) {
       setErrors(prev => ({
         ...prev,
@@ -34,12 +37,54 @@ function Booking() {
       return;
     }
 
-    console.log(formData);
-    navigateToPayment();
-  };
+    setIsSubmitting(true);
+    setErrors({ username: '', submit: '' });
 
-  const navigateToPayment = () => {
-    navigate('/payment', { state: { bookingData: formData } });
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Booking failed');
+      }
+
+      // Show success message and start countdown
+      setSuccessMessage('Almost there! Processing your booking...');
+      
+      // Start 30-second countdown
+      let timeLeft = 30;
+      const countdownInterval = setInterval(() => {
+        timeLeft -= 1;
+        setProcessingTime(timeLeft);
+        
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          navigate('/payment', { 
+            state: { 
+              bookingData: formData,
+              bookingId: data.bookingId 
+            } 
+          });
+        }
+      }, 1000);
+
+    } catch (error) {
+      setErrors(prev => ({
+        ...prev,
+        submit: error.message
+      }));
+      setSuccessMessage('');
+      setProcessingTime(30);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -49,35 +94,65 @@ function Booking() {
       [name]: value
     }));
     
-    // Clear error when user starts typing
     if (name === 'username') {
       setErrors(prev => ({
         ...prev,
         username: ''
       }));
     }
+    setSuccessMessage('');
+    setProcessingTime(30);
   };
 
   return (
     <div className="booking">
       <h1>Book an Appointment</h1>
       <form onSubmit={handleSubmit}>
-        <label className='label'>
+        {successMessage && (
+          <div className="success-message">
+            <div className="success-content">
+              {successMessage}
+              {isSubmitting && (
+                <div className="processing-timer">
+                  Redirecting to payment in {processingTime} seconds...
+                </div>
+              )}
+            </div>
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ 
+                  width: `${((30 - processingTime) / 30) * 100}%` 
+                }}
+              ></div>
+            </div>
+          </div>
+        )}
+        
+        {errors.submit && (
+          <div className="error-message">
+            {errors.submit}
+          </div>
+        )}
+        
+        <label>
           Username:
           <input
             type="email"
-            name="username"  // Changed from 'username' to 'name'
-            placeholder='johndoe@gmail.com'
+            name="username"
+            placeholder="johndoe@gmail.com"
             value={formData.username}
             onChange={handleInputChange}
+            className={errors.username ? 'error' : ''}
             required
           />
           {errors.username && (
-            <span className="error-message" style={{ color: 'red', fontSize: '0.8em' }}>
+            <span className="error-message">
               {errors.username}
             </span>
           )}
         </label>
+
         <label>
           Service:
           <select
@@ -93,6 +168,7 @@ function Booking() {
             <option value="beard_trim & haircut">Beard Trim & Haircut $35</option>
           </select>
         </label>
+
         <label>
           Date:
           <input
@@ -103,6 +179,7 @@ function Booking() {
             required
           />
         </label>
+
         <label>
           Time:
           <input
@@ -113,6 +190,7 @@ function Booking() {
             required
           />
         </label>
+
         <label>
           Payment Method:
           <select
@@ -131,7 +209,14 @@ function Booking() {
             <option value="zelle">Zelle</option>
           </select>
         </label>
-        <button type="submit">Book Now</button>
+
+        <button 
+          type="submit" 
+          disabled={isSubmitting}
+          className={isSubmitting ? 'submitting' : ''}
+        >
+          {isSubmitting ? 'Processing...' : 'Book Now'}
+        </button>
       </form>
     </div>
   );

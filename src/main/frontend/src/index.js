@@ -9,7 +9,9 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Navbar from './Navbar/Navbar'
 import Services from './Services/Services';
 import Payment from './PaymentForm/PaymentForm';
-// import Signup from'./Signup/signup';
+import Signup from'./Signup/signup';
+import Login from './Login/login';
+import ResetPassword from './resetpassword/ResetPassword';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -24,7 +26,10 @@ root.render(
        <Route path = "/contact" element ={<Contact/>}/>
        <Route path = "/services" element ={<Services/>}/>
        <Route path = "/payment" element ={<Payment/>}/>
-       {/* <Route path = "/signup" element ={<Signup/>}/> */}
+       <Route path = "/login" element ={<Login/>}/>
+       <Route path = "/signup" element ={<Signup/>}/>
+       <Route path = "/resetPassword" element ={<ResetPassword/>}/>
+       <Route path = "/payment" element ={<Payment/>}/>
     </Routes>
     </BrowserRouter>
   </React.StrictMode>
