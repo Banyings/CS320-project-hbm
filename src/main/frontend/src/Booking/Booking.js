@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+// Booking.js
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Booking.css';
 
 function Booking() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     service: '',
     date: '',
     time: '',
@@ -13,75 +14,118 @@ function Booking() {
   });
 
   const [errors, setErrors] = useState({
-    username: '',
+    email: '',
+    time: '',
     submit: ''
   });
 
-  const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [processingTime, setProcessingTime] = useState(30);
+  const [services, setServices] = useState({});
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch services and prices from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [servicesResponse, paymentMethodsResponse] = await Promise.all([
+          fetch('/api/services'),
+          fetch('/api/payment-methods')
+        ]);
+
+        if (!servicesResponse.ok || !paymentMethodsResponse.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const servicesData = await servicesResponse.json();
+        const paymentMethodsData = await paymentMethodsResponse.json();
+
+        setServices(servicesData);
+        setPaymentMethods(paymentMethodsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setErrors(prev => ({
+          ...prev,
+          submit: 'Failed to load booking data. Please refresh the page.'
+        }));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
+  const validateTime = (time) => {
+    const [hours] = time.split(':').map(Number);
+    return hours >= 8 && hours < 18;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateEmail(formData.username)) {
-      setErrors(prev => ({
-        ...prev,
-        username: 'Please enter a valid email address'
-      }));
+    // Reset errors
+    const newErrors = {
+      email: '',
+      time: '',
+      submit: ''
+    };
+
+    // Validate email
+    if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Validate time
+    if (!validateTime(formData.time)) {
+      newErrors.time = 'Please select a time between 8:00 AM and 6:00 PM';
+    }
+
+    // If there are any errors, don't submit
+    if (newErrors.email || newErrors.time) {
+      setErrors(newErrors);
       return;
     }
 
     setIsSubmitting(true);
-    setErrors({ username: '', submit: '' });
+    setErrors({ email: '', time: '', submit: '' });
 
     try {
-      const response = await fetch('/api/bookings', {
+      const response = await fetch('/api/appointments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          price: services[formData.service] || 0
+        })
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || 'Booking failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create appointment');
       }
 
-      // Show success message and start countdown
-      setSuccessMessage('Almost there! Processing your booking...');
+      const appointmentData = await response.json();
       
-      // Start 30-second countdown
-      let timeLeft = 30;
-      const countdownInterval = setInterval(() => {
-        timeLeft -= 1;
-        setProcessingTime(timeLeft);
-        
-        if (timeLeft <= 0) {
-          clearInterval(countdownInterval);
-          navigate('/payment', { 
-            state: { 
-              bookingData: formData,
-              bookingId: data.bookingId 
-            } 
-          });
-        }
-      }, 1000);
+      // Get existing cart items from localStorage or initialize empty array
+      const existingCart = JSON.parse(localStorage.getItem('appointmentCart') || '[]');
+      const updatedCart = [...existingCart, appointmentData];
+      localStorage.setItem('appointmentCart', JSON.stringify(updatedCart));
 
+      navigate('/appointmentCart');
     } catch (error) {
       setErrors(prev => ({
         ...prev,
         submit: error.message
       }));
-      setSuccessMessage('');
-      setProcessingTime(30);
+      window.scrollTo(0, 0); // Scroll to top to show error
     } finally {
       setIsSubmitting(false);
     }
@@ -89,66 +133,51 @@ function Booking() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
+    setFormData(prev => ({
+      ...prev,
       [name]: value
     }));
     
-    if (name === 'username') {
+    // Clear specific error when user starts typing
+    if (errors[name]) {
       setErrors(prev => ({
         ...prev,
-        username: ''
+        [name]: ''
       }));
     }
-    setSuccessMessage('');
-    setProcessingTime(30);
   };
+
+  if (isLoading) {
+    return <div className="booking loading">Loading booking form...</div>;
+  }
 
   return (
     <div className="booking">
       <h1>Book an Appointment</h1>
-      <form onSubmit={handleSubmit}>
-        {successMessage && (
-          <div className="success-message">
-            <div className="success-content">
-              {successMessage}
-              {isSubmitting && (
-                <div className="processing-timer">
-                  Redirecting to payment in {processingTime} seconds...
-                </div>
-              )}
-            </div>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ 
-                  width: `${((30 - processingTime) / 30) * 100}%` 
-                }}
-              ></div>
-            </div>
-          </div>
-        )}
-        
-        {errors.submit && (
-          <div className="error-message">
-            {errors.submit}
-          </div>
-        )}
-        
+      
+      {errors.submit && (
+        <div className="error-message" role="alert">
+          {errors.submit}
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit} noValidate>
         <label>
-          Username:
+          Email:
           <input
             type="email"
-            name="username"
+            name="email"
             placeholder="johndoe@gmail.com"
-            value={formData.username}
+            value={formData.email}
             onChange={handleInputChange}
-            className={errors.username ? 'error' : ''}
+            className={errors.email ? 'error' : ''}
             required
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
           />
-          {errors.username && (
-            <span className="error-message">
-              {errors.username}
+          {errors.email && (
+            <span className="error-message" id="email-error" role="alert">
+              {errors.email}
             </span>
           )}
         </label>
@@ -162,10 +191,11 @@ function Booking() {
             required
           >
             <option value="">Select a service</option>
-            <option value="haircut">Haircut $25</option>
-            <option value="shave">Shave $15</option>
-            <option value="beard_trim">Beard Trim $10</option>
-            <option value="beard_trim & haircut">Beard Trim & Haircut $35</option>
+            {Object.entries(services).map(([service, price]) => (
+              <option key={service} value={service}>
+                {service.replace(/_/g, ' ')} (${price})
+              </option>
+            ))}
           </select>
         </label>
 
@@ -176,6 +206,7 @@ function Booking() {
             name="date"
             value={formData.date}
             onChange={handleInputChange}
+            min={new Date().toISOString().split('T')[0]}
             required
           />
         </label>
@@ -188,7 +219,16 @@ function Booking() {
             value={formData.time}
             onChange={handleInputChange}
             required
+            className={errors.time ? 'error' : ''}
+            aria-invalid={errors.time ? 'true' : 'false'}
+            aria-describedby={errors.time ? 'time-error' : undefined}
           />
+          {errors.time && (
+            <span className="error-message" id="time-error" role="alert">
+              {errors.time}
+            </span>
+          )}
+          <span className="helper-text">Business hours: 8:00 AM - 6:00 PM</span>
         </label>
 
         <label>
@@ -200,22 +240,20 @@ function Booking() {
             required
           >
             <option value="">Select a payment method</option>
-            <option value="credit_card">Credit Card</option>
-            <option value="debit_card">Debit Card</option>
-            <option value="cash">Cash</option>
-            <option value="cash_app">CashApp</option>
-            <option value="paypal">PayPal</option>
-            <option value="venmo">Venmo</option>
-            <option value="zelle">Zelle</option>
+            {paymentMethods.map(method => (
+              <option key={method} value={method}>
+                {method.replace(/_/g, ' ')}
+              </option>
+            ))}
           </select>
         </label>
 
         <button 
           type="submit" 
-          disabled={isSubmitting}
+          disabled={isSubmitting || isLoading}
           className={isSubmitting ? 'submitting' : ''}
         >
-          {isSubmitting ? 'Processing...' : 'Book Now'}
+          {isSubmitting ? 'Adding to Cart...' : 'Add to Cart'}
         </button>
       </form>
     </div>

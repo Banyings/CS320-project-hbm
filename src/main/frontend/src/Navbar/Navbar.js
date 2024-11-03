@@ -1,37 +1,23 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaImages,FaCalendarAlt, FaInfoCircle, FaSignInAlt ,FaEnvelope } from 'react-icons/fa';
-// import Image from'./Image.next';
+import { FaHome, FaImages, FaCalendarAlt, FaInfoCircle,FaShoppingCart,FaCreditCard, FaEnvelope } from 'react-icons/fa';
 import './Navbar.css';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <nav className="nav">
-      <div className="logo">Logo</div>
-      {/* <Image src="../../public/logo.png" alt="log-of-the"/> */}
-      <div className={`hamburger ${isOpen ? 'active' : ''}`} onClick={toggleMenu}>
-        <span></span>
-        <span></span>
-        <span></span>
+      <div className="logo">
+        <img src="/src/main/frontend/public/logo.png" alt="logo"/>
       </div>
-      
-      <div className={`nav-links ${isOpen ? 'show' : ''}`}>
-        <Link to="/"><FaHome /> Home</Link>
-        <Link to="/login"><FaSignInAlt  /> Log In</Link>
-        <Link to="/about"><FaInfoCircle /> About</Link>
-        <Link to="/booking"><FaCalendarAlt /> Booking</Link>
-        <Link to="/contact"><FaEnvelope /> Contact</Link>
-        <Link to="/services"><FaImages /> Services</Link>
-        
-        {/* <Link to="/signup"><FaImages /> Sign Up</Link> */}
-        {/* <Link to="/resetPassword"><FaImages /> ResetPassword</Link> */}
-
+      <div className="nav-links">
+        <Link to="/" title="Home"><FaHome /><span className="link-text">Home</span></Link>
+        <Link to="/about" title="About"><FaInfoCircle /><span className="link-text">About</span></Link>
+        <Link to="/booking" title="Booking"><FaCalendarAlt /><span className="link-text">Booking</span></Link>
+        <Link to="/contact" title="Contact"><FaEnvelope /><span className="link-text">Contact</span></Link>
+        <Link to="/services" title="Services"><FaImages /><span className="link-text">Services</span></Link>
+        <Link to="/appointmentCart" title="shoppincart"><FaShoppingCart /><span className="link-text">Cart</span></Link>
+        <Link to="/payment" title="Services"><FaCreditCard/><span className="link-text">Payment</span></Link>
       </div>
     </nav>
   );

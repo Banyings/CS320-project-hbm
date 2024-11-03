@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './signup.css';
+import Login from '../Login/login';
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,13 +18,15 @@ export default function Signup() {
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/signup', {
+      const response = await fetch("/api/auth/signup", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -30,23 +34,26 @@ export default function Signup() {
         body: JSON.stringify(formData)
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const error = await response.json();
-        setError(error.message);
+        setError(data.error || 'An error occurred. Please try again later.');
         return;
       }
 
-      const signupResponse = await response.json();
-      // If the signup is successful, you can redirect the user or display a success message
-      console.log('Signup successful! User ID:', signupResponse.userId);
+      // Handle success
+      alert(data.message); // You might want to replace this with a better UI feedback
+      navigate('/verify-email'); // Redirect to verification page
     } catch (error) {
       setError('An error occurred. Please try again later.');
     }
   };
+  <Login/>
 
   return (
+   
     <div className="signup-container">
-      <h1>Create An account</h1>
+      <h1>Create An Account</h1>
       {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -66,7 +73,7 @@ export default function Signup() {
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            placeholder="johdoe@gmail.com"
+            placeholder="johndoe@gmail.com"
             id="email"
             name="email"
             value={formData.email}
@@ -79,7 +86,7 @@ export default function Signup() {
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            placeholder="johxxxxxx"
+            placeholder="••••••••"
             id="password"
             name="password"
             value={formData.password}

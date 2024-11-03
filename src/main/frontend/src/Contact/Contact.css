@@ -5,16 +5,244 @@
   padding: 20px;
   font-family: Arial, sans-serif;
   border-radius: 10px;
-  }
-.contact form{
-  padding: 20px;
-  border-radius: 0 0 10px 10px;
-  background-color: #fff;
+  /* background-color: #f5f5f5; */
 }
-.contact h1{
+
+.contact h1 {
   background-color: #282c34;
   color: white;
   padding: 20px;
   border-radius: 10px 10px 0 0;
+  margin: 0;
+  font-size: 1.8rem;
 }
 
+.contact-info {
+  background-color: #fff;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.info-item i {
+  font-size: 1.2rem;
+}
+
+.info-item p {
+  margin: 0;
+  color: #333;
+}
+
+.contact form {
+  padding: 20px;
+  border-radius: 0 0 10px 10px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #282c34;
+  box-shadow: 0 0 0 2px rgba(40, 44, 52, 0.1);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button[type="submit"] {
+  background-color: #282c34;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #373b44;
+}
+
+/* Tablet Responsive */
+@media (max-width: 768px) {
+  .contact {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .contact h1 {
+    font-size: 1.5rem;
+    padding: 15px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .contact {
+    margin: 0;
+    padding: 10px;
+    border-radius: 0;
+  }
+
+  .contact h1 {
+    border-radius: 0;
+    font-size: 1.3rem;
+    padding: 12px;
+  }
+
+  .contact-info {
+    padding: 15px 10px;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group {
+    gap: 8px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 12px 10px;
+  }
+
+  button[type="submit"] {
+    padding: 15px;
+    margin-top: 10px;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+  button[type="submit"]:active {
+    background-color: #373b44;
+    transform: scale(0.98);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .contact {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+/* Thank you message styles - Add these to your existing CSS */
+
+.inline-thank-you {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  animation: slideDown 0.5s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inline-thank-you p {
+  margin: 5px 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.redirecting {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 8px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+/* Tablet Responsive */
+@media (max-width: 768px) {
+  .inline-thank-you {
+    padding: 12px;
+    margin-top: 15px;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .inline-thank-you {
+    padding: 10px;
+    margin-top: 12px;
+  }
+
+  .inline-thank-you p {
+    font-size: 0.95rem;
+  }
+
+  .redirecting {
+    font-size: 0.85rem;
+  }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .inline-thank-you {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+}
